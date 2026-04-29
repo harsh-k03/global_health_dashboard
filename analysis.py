@@ -18,3 +18,14 @@ def reshape_data(df):
     df["Year"] = df["Year"].astype(int)
 
     return df
+
+def filter_data(df):
+    indicators = [
+        "Life expectancy at birth, total (years)",
+        "Current health expenditure (% of GDP)",
+        "Mortality rate, infant (per 1,000 live births)"
+    ]
+
+    df = df[df["Indicator Name"].isin(indicators)]
+
+    return df
