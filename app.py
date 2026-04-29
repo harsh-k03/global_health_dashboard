@@ -30,3 +30,17 @@ st.subheader("📈 Life Expectancy Trend")
 
 fig = px.line(filtered_df, x="Year", y="Life Expectancy")
 st.plotly_chart(fig)
+
+# Country comparison
+st.subheader("🌎 Country Comparison (Latest Year)")
+
+latest_year = df["Year"].max()
+compare_df = df[df["Year"] == latest_year]
+
+fig2 = px.bar(
+    compare_df.sort_values("Life Expectancy", ascending=False),
+    x="Country",
+    y="Life Expectancy"
+)
+
+st.plotly_chart(fig2)
