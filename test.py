@@ -1,9 +1,10 @@
-from analysis import load_data, reshape_data
+from analysis import load_and_prepare_data
 
-df = load_data()
-df = reshape_data(df)
+df = load_and_prepare_data()
 
 print(df.head())
+print(df.columns)
 print(df.shape)
+
 
 
