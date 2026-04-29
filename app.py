@@ -37,8 +37,12 @@ st.subheader("🌎 Country Comparison (Latest Year)")
 latest_year = df["Year"].max()
 compare_df = df[df["Year"] == latest_year]
 
+top_n = st.slider("Select number of countries", 5, 30, 10)
+
+compare_df = compare_df.sort_values("Life Expectancy", ascending=False).head(top_n)
+
 fig2 = px.bar(
-    compare_df.sort_values("Life Expectancy", ascending=False),
+    compare_df,
     x="Country",
     y="Life Expectancy"
 )
