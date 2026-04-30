@@ -48,3 +48,16 @@ fig2 = px.bar(
 )
 
 st.plotly_chart(fig2)
+
+# World Map
+st.subheader("🌍 Global Health Map")
+
+fig_map = px.choropleth(
+    df,
+    locations="Code",              # Country codes (important)
+    color="Life Expectancy",
+    hover_name="Country",
+    animation_frame="Year"
+)
+
+st.plotly_chart(fig_map)
