@@ -1,6 +1,7 @@
 import streamlit as st
 import plotly.express as px
 from analysis import load_and_prepare_data
+from model import cluster_countries
 
 # Load data
 df = load_and_prepare_data()
@@ -61,3 +62,18 @@ fig_map = px.choropleth(
 )
 
 st.plotly_chart(fig_map)
+
+# Apply clustering
+df_clustered = cluster_countries(df)
+
+st.subheader("🤖 Country Clusters")
+
+fig3 = px.scatter(
+    df_clustered,
+    x="Health Expenditure",
+    y="Life Expectancy",
+    color="Cluster",
+    hover_name="Country"
+)
+
+st.plotly_chart(fig3)
