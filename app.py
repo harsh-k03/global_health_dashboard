@@ -13,77 +13,79 @@ st.set_page_config(
 # Load data
 df = load_and_prepare_data()
 
-# Title
-st.title("🌍 Global Health Dashboard")
-
-# Sidebar filter
+# Sidebar (DEFINE BEFORE USING)
 st.sidebar.title("🌍 Global Health Dashboard")
 st.sidebar.markdown("Analyze global health trends")
 
 country = st.sidebar.selectbox("Select Country", df["Country"].unique())
 
-# Filter data
-filtered_df = df[df["Country"] == country]
+# Title
+st.title("🌍 Global Health Dashboard")
 
-# Show latest data (KPI)
-latest = filtered_df.sort_values("Year").iloc[-1]
+st.markdown("""
+This dashboard provides insights into global health trends, comparing countries
+based on life expectancy, healthcare spending, and mortality rates.
+""")
 
-st.subheader("📊 Key Metrics")
+# Tabs
+tab1, tab2, tab3 = st.tabs(["📊 Overview", "🌎 Comparison", "🤖 Insights"])
 
-col1, col2, col3 = st.columns(3)
+# Tab 1
+with tab1:
+    st.header("📊 Country Overview")
 
-col1.metric("Life Expectancy", round(latest["Life Expectancy"], 2))
-col2.metric("Health Expenditure", round(latest["Health Expenditure"], 2))
-col3.metric("Infant Mortality", round(latest["Infant Mortality"], 2))
+    filtered_df = df[df["Country"] == country]
 
-# Trend chart
-st.subheader("📈 Life Expectancy Trend")
+    if not filtered_df.empty:
+        latest = filtered_df.sort_values("Year").iloc[-1]
 
-fig = px.line(filtered_df, x="Year", y="Life Expectancy")
-st.plotly_chart(fig)
+        col1, col2, col3 = st.columns(3)
 
-# Country comparison
-st.subheader("🌎 Country Comparison (Latest Year)")
+        col1.metric("Life Expectancy", round(latest["Life Expectancy"], 2))
+        col2.metric("Health Expenditure", round(latest["Health Expenditure"], 2))
+        col3.metric("Infant Mortality", round(latest["Infant Mortality"], 2))
 
-latest_year = df["Year"].max()
-compare_df = df[df["Year"] == latest_year]
+        fig = px.line(filtered_df, x="Year", y="Life Expectancy")
+        st.plotly_chart(fig, use_container_width=True)
 
-top_n = st.slider("Select number of countries", 5, 30, 10)
+# Tab 2
+with tab2:
+    st.header("🌎 Global Comparison")
 
-compare_df = compare_df.sort_values("Life Expectancy", ascending=False).head(top_n)
+    latest_year = df["Year"].max()
+    compare_df = df[df["Year"] == latest_year]
 
-fig2 = px.bar(
-    compare_df,
-    x="Country",
-    y="Life Expectancy"
-)
+    top_n = st.slider("Select number of countries", 5, 30, 10)
 
-st.plotly_chart(fig2)
+    compare_df = compare_df.sort_values("Life Expectancy", ascending=False).head(top_n)
 
-# World Map
-st.subheader("🌍 Global Health Map")
+    fig2 = px.bar(compare_df, x="Country", y="Life Expectancy")
+    st.plotly_chart(fig2, use_container_width=True)
 
-fig_map = px.choropleth(
-    df,
-    locations="Code",              # Country codes (important)
-    color="Life Expectancy",
-    hover_name="Country",
-    animation_frame="Year"
-)
+    st.subheader("🌍 Global Health Map")
 
-st.plotly_chart(fig_map)
+    fig_map = px.choropleth(
+        df,
+        locations="Code",
+        color="Life Expectancy",
+        hover_name="Country",
+        animation_frame="Year"
+    )
 
-# Apply clustering
-df_clustered = cluster_countries(df)
+    st.plotly_chart(fig_map, use_container_width=True)
 
-st.subheader("🤖 Country Clusters")
+# Tab 3
+with tab3:
+    st.header("🤖 AI Insights")
 
-fig3 = px.scatter(
-    df_clustered,
-    x="Health Expenditure",
-    y="Life Expectancy",
-    color="Cluster",
-    hover_name="Country"
-)
+    df_clustered = cluster_countries(df)
 
-st.plotly_chart(fig3)
+    fig3 = px.scatter(
+        df_clustered,
+        x="Health Expenditure",
+        y="Life Expectancy",
+        color="Cluster",
+        hover_name="Country"
+    )
+
+    st.plotly_chart(fig3, use_container_width=True)
