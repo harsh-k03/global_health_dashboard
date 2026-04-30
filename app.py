@@ -25,7 +25,10 @@ df = get_data()
 st.sidebar.title("🌍 Global Health Dashboard")
 st.sidebar.markdown("Analyze global health trends")
 
-country = st.sidebar.selectbox("Select Country", df["Country"].unique())
+country = st.sidebar.selectbox(
+    "Select Country",
+    sorted(df["Country"].unique())
+)
 
 # Title
 st.title("🌍 Global Health Dashboard")
@@ -75,11 +78,12 @@ with tab2:
     map_df = df[df["Year"] >= 2000]
     
     fig_map = px.choropleth(
-    map_df,
+        map_df,
         locations="Code",
         color="Life Expectancy",
         hover_name="Country",
-        animation_frame="Year"
+        animation_frame="Year",
+        height=600
     )
 
     st.plotly_chart(fig_map, use_container_width=True)
