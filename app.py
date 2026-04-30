@@ -3,6 +3,13 @@ import plotly.express as px
 from analysis import load_and_prepare_data
 from model import cluster_countries
 
+# Page config
+st.set_page_config(
+    page_title="Global Health Dashboard",
+    page_icon="🌍",
+    layout="wide"
+)
+
 # Load data
 df = load_and_prepare_data()
 
@@ -10,6 +17,9 @@ df = load_and_prepare_data()
 st.title("🌍 Global Health Dashboard")
 
 # Sidebar filter
+st.sidebar.title("🌍 Global Health Dashboard")
+st.sidebar.markdown("Analyze global health trends")
+
 country = st.sidebar.selectbox("Select Country", df["Country"].unique())
 
 # Filter data
