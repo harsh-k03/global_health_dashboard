@@ -11,7 +11,11 @@ st.set_page_config(
 )
 
 # Load data
-df = load_and_prepare_data()
+@st.cache_data
+def get_data():
+    return load_and_prepare_data()
+
+df = get_data()
 
 # Sidebar (DEFINE BEFORE USING)
 st.sidebar.title("🌍 Global Health Dashboard")
