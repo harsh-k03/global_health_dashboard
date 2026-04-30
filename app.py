@@ -3,6 +3,10 @@ import plotly.express as px
 from analysis import load_and_prepare_data
 from model import cluster_countries
 
+@st.cache_data
+def get_clustered_data(df):
+    return cluster_countries(df)
+
 # Page config
 st.set_page_config(
     page_title="Global Health Dashboard",
@@ -67,9 +71,11 @@ with tab2:
     st.plotly_chart(fig2, use_container_width=True)
 
     st.subheader("🌍 Global Health Map")
-
+    
+    map_df = df[df["Year"] >= 2000]
+    
     fig_map = px.choropleth(
-        df,
+    map_df,
         locations="Code",
         color="Life Expectancy",
         hover_name="Country",
@@ -82,7 +88,7 @@ with tab2:
 with tab3:
     st.header("🤖 AI Insights")
 
-    df_clustered = cluster_countries(df)
+    df_clustered = get_clustered_data(df)
 
     fig3 = px.scatter(
         df_clustered,
